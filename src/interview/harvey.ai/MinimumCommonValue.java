@@ -1,5 +1,51 @@
 public class MinimumCommonValue {
 
+    /*
+        INTUITION
+
+        We keep one pointer for each sorted array.
+
+        At every step:
+        - look at current values from all arrays
+        - find MIN value
+        - find MAX value
+
+        CASE 1:
+        If MIN == MAX
+
+            then all arrays currently point
+            to the same number.
+
+            Since all are equal,
+            we found the smallest common number.
+
+        CASE 2:
+        If MIN != MAX
+
+            then arrays having MIN value
+            are "behind".
+
+            Since arrays are sorted,
+            smaller values can NEVER become common
+            unless they move forward.
+
+            So:
+            advance all pointers whose value == MIN
+
+        Why does this work?
+
+            Sorted arrays only move forward.
+
+            Therefore:
+            smaller values must catch up
+            to larger values.
+
+        Stop Conditions:
+
+            1. All equal -> answer found
+            2. Any pointer reaches end
+               -> no common number exists
+    */
     public static int minimumCommonValue(int[][] arrays) {
         int len = arrays.length;
         int[] ptr = new int[len];
