@@ -327,6 +327,217 @@ Develop a zero-copy, reactive RPC framework inspired by Aeron and gRPC over raw 
 
 ---
 
+# Project 5: Custom Object-Relational Mapper (ORM)
+
+Build a lightweight ORM framework using Reflection, custom annotations, JDBC, and dynamic query generation.
+
+## Concepts Covered
+
+- Reflection API
+- Custom Annotations
+- JDBC Internals
+- Dynamic Proxies
+- MethodHandles
+- Metadata Caching
+- Connection Pooling
+- Query Generation
+- Transaction Management
+
+## Subtasks
+
+### Annotation Engine
+- Design annotations like `@Entity`, `@Column`, `@Id`, `@OneToMany`
+- Build runtime metadata scanners
+- Cache reflection metadata for performance
+
+### Entity Mapper
+- Map JDBC `ResultSet` rows to Java objects
+- Support nested object hydration
+- Implement lazy-loading proxies
+
+### Query Builder
+- Generate SQL dynamically
+- Implement criteria-based querying
+- Support joins and pagination
+
+### Transaction Engine
+- Build declarative transaction manager
+- Handle rollback and commit propagation
+- Support nested transactions
+
+### Connection Pool
+- Create lightweight JDBC connection pooling
+- Track idle connections
+- Implement timeout management
+
+## Expected Benchmark Results
+
+| Metric | Target |
+|---|---|
+| Entity Mapping Speed | < 2 µs/object |
+| Reflection Cache Hit Rate | > 99% |
+| Concurrent Transactions | 50,000+ |
+| SQL Query Generation | < 1 ms |
+
+---
+
+# Project 6: Off-Heap Cache System
+
+Build an ultra-low latency cache storing data completely outside the JVM heap using Unsafe or Foreign Function & Memory API.
+
+## Concepts Covered
+
+- Off-Heap Memory
+- Unsafe API
+- Foreign Function & Memory API
+- Direct Memory Management
+- Lock-Free Data Structures
+- Cache Eviction Algorithms
+- JVM GC Optimization
+
+## Subtasks
+
+### Off-Heap Allocator
+- Allocate memory using `Unsafe` or `MemorySegment`
+- Design custom memory allocator
+- Handle alignment and fragmentation
+
+### Cache Index
+- Build lock-free hash indexing
+- Use CAS operations with `VarHandle`
+- Implement collision resolution
+
+### Serialization Layer
+- Serialize objects into binary layout
+- Support zero-copy reads
+- Optimize memory footprint
+
+### Eviction Policies
+- Implement LRU/LFU eviction
+- Build time-based expiration engine
+- Support segmented cache regions
+
+### Metrics & Diagnostics
+- Track direct memory usage
+- Expose cache metrics
+- Detect memory leaks
+
+## Expected Benchmark Results
+
+| Metric | Target |
+|---|---|
+| Read Latency | < 1 µs |
+| Heap Allocation During Access | 0 |
+| GC Pauses | Near 0 |
+| Sustained Throughput | 5M ops/sec |
+
+---
+
+# Project 7: High-Performance JSON Parser
+
+Write a streaming byte-level JSON parser using Java NIO and internal string pooling to minimize allocations.
+
+## Concepts Covered
+
+- Java NIO
+- ByteBuffer Parsing
+- Streaming Parsers
+- Zero-Copy Processing
+- String Pooling
+- Finite State Machines
+- Memory Optimization
+
+## Subtasks
+
+### Tokenizer Engine
+- Parse raw UTF-8 byte streams
+- Build finite-state token parser
+- Avoid intermediate string creation
+
+### Streaming Reader
+- Support incremental parsing
+- Parse large JSON documents in chunks
+- Handle async data streams
+
+### Object Mapper
+- Map JSON to Java objects dynamically
+- Use Reflection or MethodHandles
+- Support polymorphic deserialization
+
+### String Pooling
+- Implement internal string deduplication
+- Reuse frequently occurring keys
+- Minimize heap pressure
+
+### Binary Optimization
+- Parse directly from `ByteBuffer`
+- Use SIMD optimizations where possible
+- Benchmark against Jackson/Gson
+
+## Expected Benchmark Results
+
+| Metric | Target |
+|---|---|
+| Parsing Throughput | > 2 GB/sec |
+| Heap Allocation Reduction | 80%+ |
+| Streaming Latency | < 2 ms |
+| JSON Size Supported | 10GB+ streams |
+
+---
+
+# Project 8: Secure Dynamic Custom Class Loader
+
+Implement a dynamic class loader capable of loading encrypted `.class` files over a network, decrypting them in memory, and executing them securely.
+
+## Concepts Covered
+
+- Custom ClassLoaders
+- JVM Bytecode Loading
+- Reflection
+- Security Managers
+- Dynamic Module Systems
+- Network Programming
+- Encryption & Decryption
+- Runtime Sandboxing
+
+## Subtasks
+
+### Network Class Fetcher
+- Download encrypted `.class` files over TCP/HTTP
+- Support asynchronous fetching
+- Implement retry and caching logic
+
+### In-Memory Decryption
+- Decrypt bytecode in memory
+- Avoid writing decrypted classes to disk
+- Support AES/GCM encryption
+
+### Dynamic Class Loading
+- Extend `ClassLoader`
+- Define classes dynamically
+- Handle dependency resolution
+
+### Sandbox Execution
+- Restrict filesystem/network access
+- Implement permission boundaries
+- Validate bytecode integrity
+
+### Hot Reloading Engine
+- Reload classes dynamically
+- Support version isolation
+- Handle runtime module replacement
+
+## Expected Benchmark Results
+
+| Metric | Target |
+|---|---|
+| Class Load Time | < 5 ms |
+| Hot Reload Downtime | < 100 ms |
+| Memory Overhead | Minimal |
+| Network Fetch Throughput | 10,000+ classes/min |
+
+---
+
 # Additional Advanced Project Ideas
 
 ## JVM Profiler & Heap Analyzer
