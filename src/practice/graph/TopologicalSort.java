@@ -11,8 +11,8 @@
  */
 
 package practice.graph;
-import dsa.Graph;
 
+import dsa.Graph;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -22,22 +22,21 @@ import java.util.Queue;
     the nodes to which it has outgoing edges.
     There can be more than one topological sorting for a graph.
 */
-public class TopologicalSort extends Graph{
+public class TopologicalSort extends Graph {
 
-    TopologicalSort(int v){
+    TopologicalSort(int v) {
         super(v);
     }
 
     @Override
-    public void addEdge(int u, int v){
-        adjacencyList.get(u).add(v);
+    public void addEdge(int u, int v) {
+        adjacencyList[u].add(v);
     }
 
-    public int getInDegree(int vertex){
+    public int getInDegree(int vertex) {
         int inDegree = 0;
-        for(int i = 0; i<size(); ++i){
-            if(adjacencyList.get(i).contains(vertex))
-                inDegree++;
+        for (int i = 0; i < size(); ++i) {
+            if (adjacencyList[i].contains(vertex)) inDegree++;
         }
         return inDegree;
     }
@@ -54,61 +53,75 @@ public class TopologicalSort extends Graph{
             6. If count of visited nodes is not equal to nodes in graph then topological sort is not
             possible as graph has cycles else return list of visited nodes.
      */
-    public void topologicalSort(){
+    public void topologicalSort() {
         Queue<Integer> q = new LinkedList<>();
         int count = 0;
         int[] indegree = new int[size()];
         int[] sorted = new int[size()];
 
-        for(int i = 0; i<size(); ++i){
+        for (int i = 0; i < size(); ++i) {
             indegree[i] = getInDegree(i);
-            if(indegree[i]==0)
-                q.add(i);
+            if (indegree[i] == 0) q.add(i);
         }
 
-        while(!q.isEmpty()){
+        while (!q.isEmpty()) {
             int v = q.poll();
             sorted[count++] = v;
-            for(int i : adjacencyList.get(v)){
+            for (int i : adjacencyList[v]) {
                 indegree[i]--;
-                if(indegree[i]==0)
-                    q.add(i);
+                if (indegree[i] == 0) q.add(i);
             }
         }
 
-        if(count==size())
-            System.out.println("Topologically sorted list : " + Arrays.toString(sorted));
-        else
-            System.out.println("Topological Sorting not possible as Graph as cycles.");
+        if (count == size()) System.out.println(
+            "Topologically sorted list : " + Arrays.toString(sorted)
+        );
+        else System.out.println(
+            "Topological Sorting not possible as Graph as cycles."
+        );
     }
 
     public static void main(String[] args) {
         TopologicalSort input = new TopologicalSort(8);
-        input.addEdge(2,0);
-        input.addEdge(0,3);
-        input.addEdge(1,2);
-        input.addEdge(1,3);
-        input.addEdge(1,4);
-        input.addEdge(3,5);
-        input.addEdge(4,6);
-        input.addEdge(2,5);
-        input.addEdge(0,5);
-        input.addEdge(6,7);
+        input.addEdge(2, 0);
+        input.addEdge(0, 3);
+        input.addEdge(1, 2);
+        input.addEdge(1, 3);
+        input.addEdge(1, 4);
+        input.addEdge(3, 5);
+        input.addEdge(4, 6);
+        input.addEdge(2, 5);
+        input.addEdge(0, 5);
+        input.addEdge(6, 7);
 
         input.printGraph();
         System.out.println();
 
-        for(int i = 0; i< input.size(); ++i) {
-            System.out.println("Vertex : " + i + ", indegree -> " + input.getInDegree(i) + " :: outdegree -> " + input.adjacencyList.get(i).size());
+        for (int i = 0; i < input.size(); ++i) {
+            System.out.println(
+                "Vertex : " +
+                    i +
+                    ", indegree -> " +
+                    input.getInDegree(i) +
+                    " :: outdegree -> " +
+                    input.adjacencyList[i].size()
+            );
         }
         input.topologicalSort();
 
         // Lets check if graph has cycles
         System.out.println();
-        input.addEdge(7,5);
-        input.addEdge(5,1);
-        for(int i = 0; i< input.size(); ++i) {
-            System.out.println("Vertex : " + i + ", indegree -> " + input.getInDegree(i) + " :: outdegree -> " + input.adjacencyList.get(i).size());
+        input.addEdge(7, 5);
+        input.addEdge(5, 1);
+        for (int i = 0; i < input.size(); ++i) {
+            System.out.println(
+                "Vertex : " +
+                    i +
+                    ", indegree -> " +
+                    input.getInDegree(i) +
+                    " :: outdegree -> " +
+                    input.adjacencyList[i].size()
+            );
         }
         input.topologicalSort();
     }

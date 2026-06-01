@@ -19,10 +19,11 @@ a path from vertex i to j. The reach-ability matrix is called the transitive
 closure of a graph.
  */
 public class TransitiveClosure {
+
     CycleInDirected G;
     int[][] transitiveMatrix;
 
-    TransitiveClosure(int v){
+    TransitiveClosure(int v) {
         G = new CycleInDirected(v);
         transitiveMatrix = new int[v][v];
     }
@@ -37,27 +38,25 @@ public class TransitiveClosure {
     dist[i][j] as dist[i][k] + dist[k][j] if dist[i][j] > dist[i][k] + dist[k][j]
     Time complexity : O(V^3)
      */
-    void floydWarshallAlgorithm(){
+    void floydWarshallAlgorithm() {
         int V = G.size();
         int[][] distance = new int[V][V];
-        for(int i = 0; i<V; ++i){
-            for(int j = 0; j<V; ++j){
-                if(i==j)
-                    distance[i][j] = 0;
-                else if(G.adjacencyMatrix[i][j]!=0)
-                    distance[i][j] = G.adjacencyMatrix[i][j];
-                else
-                    distance[i][j]= 999999;
+        for (int i = 0; i < V; ++i) {
+            for (int j = 0; j < V; ++j) {
+                if (i == j) distance[i][j] = 0;
+                else if (G.adjacencyMatrix[i][j] != 0) distance[i][j] =
+                    G.adjacencyMatrix[i][j];
+                else distance[i][j] = 999999;
             }
         }
 
         // Iterate over all the intermediate vertices
-        for(int k = 0; k<V; ++k){
+        for (int k = 0; k < V; ++k) {
             // Iterate over all the source vertices
-            for(int i = 0; i<V; ++i){
+            for (int i = 0; i < V; ++i) {
                 // Iterate over all the destination vertices
-                for(int j = 0; j<V; ++j){
-                    if(distance[i][k]+distance[k][j] < distance[i][j]){
+                for (int j = 0; j < V; ++j) {
+                    if (distance[i][k] + distance[k][j] < distance[i][j]) {
                         distance[i][j] = distance[i][k] + distance[k][j];
                     }
                 }
@@ -68,33 +67,31 @@ public class TransitiveClosure {
     }
 
     // Using DFS. Time Complexity : O(V^2)
-    void dfs(){
+    void dfs() {
         // Iterate over all the vertices
-        for(int i = 0; i<G.size(); ++i){
-            dfsUtil(i,i);
+        for (int i = 0; i < G.size(); ++i) {
+            dfsUtil(i, i);
         }
 
         printMatrix(transitiveMatrix);
     }
 
     // Using DFS online
-    void dfsUtil(int i, int j){
+    void dfsUtil(int i, int j) {
         // Set all the vertices that you can visit from ith vertex
         transitiveMatrix[i][j] = 1;
-        for(int s : G.adjacencyList.get(j)){
-            if(transitiveMatrix[i][s]==0){
-                dfsUtil(i,s);
+        for (int s : G.adjacencyList[j]) {
+            if (transitiveMatrix[i][s] == 0) {
+                dfsUtil(i, s);
             }
         }
     }
 
-    void printMatrix(int[][] matrix){
+    void printMatrix(int[][] matrix) {
         for (int[] row : matrix) {
             for (int column : row) {
-                if (column == 999999)
-                    System.out.print("INF ");
-                else
-                    System.out.print(column + " ");
+                if (column == 999999) System.out.print("INF ");
+                else System.out.print(column + " ");
             }
             System.out.println();
         }
@@ -104,11 +101,11 @@ public class TransitiveClosure {
         TransitiveClosure input = new TransitiveClosure(5);
         // 0 ---> 3 ---> 4 ----> 2
         //   ---> 1 -----------> 2
-        input.G.addEdge(0,1);
-        input.G.addEdge(0,3);
-        input.G.addEdge(1,2);
-        input.G.addEdge(3,4);
-        input.G.addEdge(4,2);
+        input.G.addEdge(0, 1);
+        input.G.addEdge(0, 3);
+        input.G.addEdge(1, 2);
+        input.G.addEdge(3, 4);
+        input.G.addEdge(4, 2);
 
         input.printMatrix(input.G.adjacencyMatrix);
         System.out.println();

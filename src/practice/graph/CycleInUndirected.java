@@ -15,8 +15,9 @@ package practice.graph;
 import dsa.Graph;
 
 // Detect Graph in an undirected Graph
-public class CycleInUndirected extends Graph{
-    CycleInUndirected(int v){
+public class CycleInUndirected extends Graph {
+
+    CycleInUndirected(int v) {
         super(v);
     }
 
@@ -30,26 +31,21 @@ public class CycleInUndirected extends Graph{
     *** Approach is simple : Just do a DFS and pass parent as one of parameter. Compare parent with
     next visited element, if they are not same then there is a back edge ***
      */
-    boolean isGraphCyclic(){
+    boolean isGraphCyclic() {
         boolean[] visited = new boolean[size()];
-        for(int i = 0; i<size(); ++i){
-            if(!visited[i])
-                if(checkCycle(i, -1, visited))
-                    return true;
+        for (int i = 0; i < size(); ++i) {
+            if (!visited[i]) if (checkCycle(i, -1, visited)) return true;
         }
 
         return false;
     }
 
-    boolean checkCycle(int i, int parent, boolean[] visited){
-        if(visited[i])
-            return true;
+    boolean checkCycle(int i, int parent, boolean[] visited) {
+        if (visited[i]) return true;
 
         visited[i] = true;
-        for(int nxt : adjacencyList.get(i)){
-            if(nxt!=parent)
-                if(checkCycle(nxt, i, visited))
-                    return true;
+        for (int nxt : adjacencyList[i]) {
+            if (nxt != parent) if (checkCycle(nxt, i, visited)) return true;
         }
 
         return false;
@@ -57,14 +53,14 @@ public class CycleInUndirected extends Graph{
 
     public static void main(String[] args) {
         CycleInUndirected input = new CycleInUndirected(6);
-        input.addEdge(0,1);
-        input.addEdge(0,2);
-        input.addEdge(0,3);
-        input.addEdge(1,4);
-        input.addEdge(2,5);
+        input.addEdge(0, 1);
+        input.addEdge(0, 2);
+        input.addEdge(0, 3);
+        input.addEdge(1, 4);
+        input.addEdge(2, 5);
 
-        System.out.println(input.isGraphCyclic()?"Cyclic" : "Not cyclic");
-        input.addEdge(0,5);
-        System.out.println(input.isGraphCyclic()?"Cyclic" : "Not cyclic");
+        System.out.println(input.isGraphCyclic() ? "Cyclic" : "Not cyclic");
+        input.addEdge(0, 5);
+        System.out.println(input.isGraphCyclic() ? "Cyclic" : "Not cyclic");
     }
 }
