@@ -17,10 +17,11 @@ public class UnionFind {
     }
 
     int find(int x) {
-        if (parent[x] != x) {
-            parent[x] = find(parent[x]);
+        while (parent[x] != x) {
+            parent[x] = parent[parent[x]];
+            x = parent[x];
         }
-        return parent[x];
+        return x; // At this point, x == parent[x]
     }
 
     boolean union(int a, int b) {
@@ -31,11 +32,10 @@ public class UnionFind {
 
         if (rank[pa] > rank[pb]) {
             parent[pb] = pa;
-        } else if (rank[pb] > rank[pa]) {
-            parent[pa] = pb;
+            rank[pa] += rank[pb];
         } else {
             parent[pb] = pa;
-            rank[pa]++;
+            rank[pb] += rank[pa];
         }
 
         return true;
