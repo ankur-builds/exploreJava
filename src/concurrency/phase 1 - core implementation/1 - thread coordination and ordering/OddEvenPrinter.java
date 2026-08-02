@@ -13,7 +13,10 @@ public class OddEvenPrinter {
                 wait();
             }
 
-            if (number > limit) break;
+            if (number > limit){
+                notifyAll();
+                return;
+            };
 
             System.out.println(
                 Thread.currentThread().getName() + " -> " + number
@@ -30,7 +33,10 @@ public class OddEvenPrinter {
                 wait();
             }
 
-            if (number > limit) break;
+            if (number > limit){
+                notifyAll();
+                return;
+            };
 
             System.out.println(
                 Thread.currentThread().getName() + " -> " + number

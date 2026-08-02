@@ -14,8 +14,10 @@ public class ABCABC {
                 while (state != 'A' && iteration < limit) {
                     wait();
                 }
-                if(iteration >= limit)
-                    break;
+                if(iteration >= limit){
+                    notifyAll();
+                    return;
+                }
 
                 System.out.println("count :" + iteration + " -> A");
                 state = 'B';
@@ -33,8 +35,10 @@ public class ABCABC {
                     wait();
                 }
 
-                if(iteration >= limit)
-                    break;
+                if(iteration >= limit){
+                    notifyAll();
+                    return;
+                }
 
                 System.out.println("count :" + iteration + " -> B");
                 state = 'C';
