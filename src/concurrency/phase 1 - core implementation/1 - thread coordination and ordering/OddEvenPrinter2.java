@@ -17,17 +17,20 @@ public class OddEvenPrinter2 {
     public void printOdd() {
         lock.lock();
         try {
-            while (number <= limit) {
-                while (number % 2 == 0) odd.await();
+            while (true) {
+                while (number <= limit && number % 2 == 0)
+                    odd.await();
 
                 if (number > limit) {
-                    lock.unlock();
+                    even.signalAll();
                     return;
                 }
+
                 System.out.println(
                     number + " -> " + Thread.currentThread().getName()
                 );
-                even.signal();
+                number++;
+                even.signalAll();
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -39,16 +42,20 @@ public class OddEvenPrinter2 {
     public void printEven() {
         lock.lock();
         try {
-            while (number <= limit) {
-                while (number % 2 == 1) even.await();
+            while (true) {
+                while (number <= limit && number % 2 == 1)
+                    even.await();
+
                 if (number > limit) {
-                    lock.unlock();
+                    odd.signalAll();
                     return;
                 }
+
                 System.out.println(
                     number + " -> " + Thread.currentThread().getName()
                 );
-                odd.signal();
+                number++;
+                odd.signalAll();
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -64,5 +71,25 @@ public class OddEvenPrinter2 {
             new Thread(oddeven::printOdd).start();
             new Thread(oddeven::printEven).start();
         }
+
+        /*
+        try{
+            Thread.sleep(2000);
+        } catch (InterruptedException e){
+            Thread.currentThread().interrupt();
+        }
+
+        for (Thread t : Thread.getAllStackTraces().keySet()) {
+            if (t.getName().startsWith("Thread-")) {
+
+                System.out.println(
+                    "\n" + t.getName() + " : " + t.getState()
+                );
+
+                for (StackTraceElement e : t.getStackTrace())
+                    System.out.println("\t" + e);
+            }
+        }
+        */
     }
 }
