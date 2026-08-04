@@ -1,4 +1,3 @@
-
 public class NThreadOrdered{
 
     private long turn = 0;
