@@ -35,6 +35,8 @@ public class MiniThreadPool {
         queue = new ArrayBlockingQueue<>(capacity);
         for (int i = 1; i <= workers; ++i) {
             Thread worker = new Thread(() -> {
+                // can also use while(true) and break when catching interrupt exception
+                // or this approach. This is called production shutdown pattern
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
                         Runnable task = queue.take();
