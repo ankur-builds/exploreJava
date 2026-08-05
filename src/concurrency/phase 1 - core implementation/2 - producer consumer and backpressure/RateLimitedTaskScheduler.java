@@ -27,26 +27,17 @@ public class RateLimitedTaskScheduler {
     private final BlockingQueue<Runnable> queue;
     private final Semaphore permits;
 
-    public RateLimitedTaskScheduler(
-        int workers,
-        int queueCapacity,
-        int permitsPerSecond
-    ) {
+    public RateLimitedTaskScheduler(int workers, int queueCapacity, int permitsPerSecond) {
         queue = new ArrayBlockingQueue<>(queueCapacity);
         permits = new Semaphore(permitsPerSecond);
 
         // Refill permits every second
-        ScheduledExecutorService refill =
-            Executors.newSingleThreadScheduledExecutor();
+        ScheduledExecutorService refill = Executors.newSingleThreadScheduledExecutor();
 
-        refill.scheduleAtFixedRate(
-            () -> {
+        refill.scheduleAtFixedRate(() -> {
                 permits.drainPermits();
                 permits.release(permitsPerSecond);
-            },
-            1,
-            1,
-            TimeUnit.SECONDS
+            }, 1, 1, TimeUnit.SECONDS
         );
 
         for (int i = 1; i <= workers; i++) {
@@ -54,9 +45,7 @@ public class RateLimitedTaskScheduler {
                 while (true) {
                     try {
                         Runnable task = queue.take();
-
                         permits.acquire();
-
                         task.run();
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
@@ -74,15 +63,10 @@ public class RateLimitedTaskScheduler {
     }
 
     public static void main(String[] args) throws Exception {
-        RateLimitedTaskScheduler scheduler = new RateLimitedTaskScheduler(
-            3,
-            20,
-            5 // Max 5 tasks/sec
-        );
+        RateLimitedTaskScheduler scheduler = new RateLimitedTaskScheduler(3, 20, 5); // Max 5 tasks/sec
 
         for (int i = 1; i <= 20; i++) {
             final int id = i;
-
             scheduler.submit(() -> {
                 System.out.printf(
                     "%d : %s executed Task-%d%n",
