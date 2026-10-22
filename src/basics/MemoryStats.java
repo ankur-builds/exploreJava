@@ -1,4 +1,7 @@
+package basics;
+
 public class MemoryStats {
+
     public static void main(String[] args) throws InterruptedException {
         Runtime runtime = Runtime.getRuntime();
 
@@ -16,3 +19,9 @@ public class MemoryStats {
         }
     }
 }
+
+/*
+Run it with
+javac MemoryStats.java
+java -Xms128m -Xmx256m MemoryStats
+*/
