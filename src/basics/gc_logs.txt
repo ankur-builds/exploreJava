@@ -308,3 +308,95 @@ Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
 [0.053s][info][gc,exit        ]   region size 1M, 1 eden (1M), 0 survivor (0M), 2 old (2M), 0 humongous (0M), 61 free (61M)
 [0.053s][info][gc,exit        ]  Metaspace       used 472K, committed 640K, reserved 1114112K
 [0.053s][info][gc,exit        ]   class space    used 47K, committed 128K, reserved 1048576K
+
+
+================================================================================
+JVM MEMORY & GARBAGE COLLECTION: LOG ANALYSIS REPORT
+================================================================================
+
+1. LOG ANALYSIS & EXECUTION TIMELINE
+--------------------------------------------------------------------------------
+Command Executed:
+java -Xms32m -Xmx64m '-Xlog:gc*,safepoint' basics.AllocationPressure
+
+Target Environment & Configuration:
+- Garbage Collector: G1 (Garbage-First)
+- JDK Version: 27 (Release Build)
+- Heap Limits: Min/Initial = 32 MB (-Xms32m), Max = 64 MB (-Xmx64m)
+- G1 Region Size: 1 MB (Total 64 regions at full expansion)
+- System Hardware: 10 CPUs, 16 GB RAM
+
+
+PHASE A: INITIALIZATION & METASPACE (0.006s - 0.010s)
+--------------------------------------------------------------------------------
+- G1 GC initialized with 9 Parallel Workers and 2 Concurrent Workers.
+- CDS (Class Data Sharing) archive mapped in native memory.
+- Metaspace reserved 1,073,741,824 bytes (~1 GB) for compressed class space.
+- JDK 27 flag 'UseCompactObjectHeaders 1' active (reduces per-object header size).
+
+
+PHASE B: HEAP FILLING & HUMONGOUS ALLOCATIONS (0.010s - 0.042s)
+--------------------------------------------------------------------------------
+- Application loops, allocating 1 MB byte arrays (new byte[1024 * 1024]).
+- G1 Region Size is 1 MB. Any allocation >= 50% of region size (>500 KB) is
+  classified as a "Humongous Allocation" and placed in dedicated regions.
+- Retained objects grow from 1 MB to 6 MB; Used heap reaches 14 MB out of 34 MB
+  committed space.
+
+
+PHASE C: GC ESCALATION & EVACUATION FAILURE (0.042s - 0.047s)
+--------------------------------------------------------------------------------
+- [GC(0)] Triggered by G1 Humongous Allocation. Eden regions cleared (2->0),
+  survivor updated (0->1), Humongous regions held at 12.
+- [GC(1)] Concurrent Mark Cycle attempts to trace and mark reachable objects in
+  background threads while app runs.
+- App continues allocating arrays (Retained MB grows from 7 to 29 MB). Heap
+  committed expands from 34 MB to 64 MB (maximum allowed).
+- [GC(3)] Young Mixed GC encounters "Evacuation Failure: Allocation". G1 had
+  zero free target regions available to copy live objects into.
+
+
+PHASE D: STOP-THE-WORLD EMERGENCY FULL GC LOOPS (0.047s - 0.054s)
+--------------------------------------------------------------------------------
+- [GC(4), GC(5), GC(7), GC(9)] G1 enters Full GC Compaction mode:
+  - Phase 1: Mark live objects
+  - Phase 2: Prepare compaction
+  - Phase 3: Adjust pointers
+  - Phase 4: Compact heap
+  - Phase 5: Reset Metadata
+- Result: Heap occupancy stays stuck at 61M->61M(64M) and 63M->63M(64M).
+  Zero memory is reclaimed because all 1 MB arrays are strongly referenced
+  in the 'retained' List.
+
+
+PHASE E: FATAL OUT OF MEMORY ERROR & EXIT (0.055s)
+--------------------------------------------------------------------------------
+- Line 13 in AllocationPressure.java attempts string concatenation for
+  System.out.printf.
+- Unsafe.allocateUninitializedArray fails because no free contiguous heap
+  space remains.
+- JVM throws 'java.lang.OutOfMemoryError: Java heap space'.
+- Exception unwinds main() stack frame, destroying local 'retained' reference.
+- [GC(11)] Full GC runs during shutdown. Unreferenced arrays are reclaimed:
+  Humongous regions drop from 62 -> 0; Heap footprint drops from 63M -> 1M.
+
+
+================================================================================
+2. KEY GC LOG CONCEPTS QUICK-REFERENCE
+================================================================================
+
+Log Line / Term                       Meaning
+----------------------------------    ------------------------------------------
+G1 Humongous Allocation               Allocation of an object taking >50% of
+                                      a G1 region size (>500 KB here).
+
+Evacuation Failure: Allocation        GC tried to move live objects to a clean
+                                      region, but the heap was 100% full.
+
+Attempting full compaction            G1 abandoned concurrent marking and fell
+                                      back to Stop-The-World Full GC.
+
+63M->63M(64M)                         [Used Before] -> [Used After] (Committed)
+                                      Indicates 0 bytes were reclaimed.
+
+================================================================================
