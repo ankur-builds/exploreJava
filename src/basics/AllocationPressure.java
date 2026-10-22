@@ -27,4 +27,8 @@ public class AllocationPressure {
 Run it with
 javac AllocationPressure.java
 java -Xms32m -Xmx64m AllocationPressure
+
+Observe GC logs => java -Xms32m -Xmx64m '-Xlog:gc*,safepoint' AllocationPressure
+
+
 */
