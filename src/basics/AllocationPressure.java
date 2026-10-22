@@ -28,7 +28,9 @@ Run it with
 javac AllocationPressure.java
 java -Xms32m -Xmx64m AllocationPressure
 
-Observe GC logs => java -Xms32m -Xmx64m '-Xlog:gc*,safepoint' AllocationPressure
+Observe GC logs => java -Xms32m -Xmx64m '-Xlog:gc*,safepoint' basics.AllocationPressure
+
+Capture a heap dump => java -Xms32m -Xmx64m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./heap-dump.hprof basics.AllocationPressure
 
 
 */

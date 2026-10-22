@@ -29,4 +29,16 @@ public class TemporaryAllocation {
 Run it with
 javac TemporaryAllocation.java
 java -Xms32m -Xmx64m TemporaryAllocation
+
+Inspect JVM diagnostics
+Start a Java process and identify its PID.
+jcmd -l
+
+
+Then inspect its command line and memory configuration:
+jcmd <PID> VM.command_line
+jcmd <PID> GC.heap_info
+
+
+Replace <PID> with the actual process ID.
 */
