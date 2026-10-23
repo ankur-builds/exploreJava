@@ -1,3 +1,5 @@
+package basics;
+
 public class RaceConditionDemo {
 
     private static int count = 0;
