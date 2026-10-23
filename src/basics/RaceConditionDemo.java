@@ -20,8 +20,8 @@ public class RaceConditionDemo {
         a.start();
         b.start();
 
-        a.join();
-        b.join();
+        a.join(); // The main program pauses here until thread 'a' is 100% finished
+        b.join(); // The main program pauses here until thread 'b' is 100% finished
 
         System.out.println("Expected: " + 2 * incrementsPerThread);
         System.out.println("Actual:   " + count);
