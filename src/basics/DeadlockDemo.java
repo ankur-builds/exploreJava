@@ -1,3 +1,5 @@
+package basics;
+
 public class DeadlockDemo {
 
     private static final Object LOCK_A = new Object();
