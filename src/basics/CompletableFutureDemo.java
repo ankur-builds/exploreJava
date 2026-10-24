@@ -20,9 +20,6 @@ public class CompletableFutureDemo {
 
         // runAsync: Performs an action that returns nothing (Fire-and-forget alert)
         CompletableFuture<Void> systemCheck = CompletableFuture.runAsync(() -> {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ignored) {}
             log("System Diagnostic Check running...");
         }, testExecutor);
 
