@@ -1,3 +1,5 @@
+package basics;
+
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.StructuredTaskScope;
