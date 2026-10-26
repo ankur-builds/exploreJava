@@ -13,24 +13,32 @@
 package basics;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 public class Date {
+
     static String date = "2020-11-26 12:57:37.0";
     static StringBuilder str = new StringBuilder(date);
 
-    static String convert(){
-        str.setCharAt(10,'T');
+    static String convert() {
+        str.setCharAt(10, 'T');
         str.append("00+0000");
         return str.toString();
     }
 
-    static void getSeconds(String givenTime){
-        System.out.println(ChronoUnit.MILLIS.between(Instant.parse(givenTime), Instant.now()));
+    static void getSeconds(String givenTime) {
+        System.out.println(
+            ChronoUnit.MILLIS.between(Instant.parse(givenTime), Instant.now())
+        );
     }
 
     public static void main(String[] args) {
         System.out.println("#1 Convert : " + convert());
         getSeconds("2020-11-29T12:59:52.893Z");
+
+        IO.println("Local Date : %s".formatted(LocalDate.now()));
+        IO.println("Local Time : %s".formatted(LocalTime.now()));
     }
 }
